@@ -1,6 +1,10 @@
 # coding=UTF8
 
 # PostgreSQLModel it's a wrapper of psycopg2. 
+# Easy wrapper for psycopg2 based on CodeIgniter models. A parser from python data structure to SQL, 
+# it allows to insert data in a postgresql without writting SQL in a secure way, just give a dictionary 
+# (or an array of dictionaries) and the table where the data will be added to.
+
 # Copyright (C) 2014 Geographica [Legal name - Geografía Aplicada S.L]
 # Author: Alberto Asuero
 
@@ -26,11 +30,11 @@ class Result():
         self._cur = cur
     
     def result(self):
-        """Returns all the result of the query"""
+        """Returns an array of dictionaries with all the results of the query. Dictionary keys are the column names"""
         return self._cur.fetchall()
     
     def row(self):
-        """Returns a row of the query"""
+        """Returns a dictionary with the first row of the query. Dictionary keys are the column names"""
         return self._cur.fetchone()        
 
 class PostgreSQLModel():
