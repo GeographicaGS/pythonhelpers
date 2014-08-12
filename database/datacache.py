@@ -28,7 +28,7 @@ class DataCache(object):
         self._prefix = prefix
         self._timeout = timeout
 
-    def req(self,obj,method,timeout=None, *args, **kwargs):
+    def req(self,obj,method,forceupdate=False,timeout=None, *args, **kwargs):
         if self._client:
             s = ""
             for i in args:
@@ -38,7 +38,8 @@ class DataCache(object):
           
             key = hashlib.sha256(obj.__class__.__name__ + method+s).hexdigest()
             v = self.get(key)
-            if v:
+
+            if v and not forceupdate:
                 return(v)
             else:
                 out = getattr(obj, method)(*args, **kwargs)
@@ -47,7 +48,7 @@ class DataCache(object):
         else:
             return getattr(obj, method)(*args, **kwargs)
 
-    def reqFunc(self,fn,timeout=None,namespace="", *args, **kwargs):
+    def reqFunc(self,fn,forceupdate=False,timeout=None,namespace="", *args, **kwargs):
         if self._client:
             s = ""
             for i in args:
@@ -57,7 +58,7 @@ class DataCache(object):
           
             key = hashlib.sha256(namespace + fn.__name__ + s).hexdigest()
             v = self.get(key)
-            if v:
+            if v and not forceupdate:
                 return(v)
             else:
                 out = fn(*args, **kwargs)
@@ -79,6 +80,9 @@ class DataCache(object):
         raise Exception("Virtual method called. This method should be overwritten")
 
     def flush(self):
+        raise Exception("Virtual method called. This method should be overwritten")
+
+    def delete(self,key):
         raise Exception("Virtual method called. This method should be overwritten")
 
 
@@ -114,5 +118,8 @@ class RedisDataCache(DataCache):
         or only keys matching an optional pattern"""
         keys = self.getClient().keys(self.getPrefix() + pattern + "*")
         [self.getClient().delete(*keys[i:i+step]) for i in xrange(0, len(keys), step)]
+
+    def delete(self,key):
+        self.getClient().delete(self.getPrefix() + key)
 
 

@@ -25,9 +25,9 @@ from database.datacache import RedisDataCache,MemcachedDataCache
 
 #from database.postgresql.postgresqlmodel import PostgreSQLModel
 #import psycopg2
-# conn = psycopg2.connect(host="localhost",dbname="elcano_iepg", \
+# conn = psycopg2.connect(host="localhost",dbname="XXX", \
 #                                      port=5432,user="postgres", \
-#                                      password="yesterday")
+#                                      password="XXX")
 
 # class SampleDataModel(PostgreSQLModel):
 #     def getData(self):
@@ -67,25 +67,25 @@ def testFn():
         }
 
 
-
-
 print "***********************\nStart Redis test\n***********************"
 # Use a redis cached
 connclient = redis.StrictRedis(host='localhost', port=6379, db=0)
 cache = RedisDataCache(connclient,"testapp")
 # Flush cache
-cache.flush()
+#cache.flush()
 
 sdm = SampleDataModel()
 # GetData method is executed
-response = cache.req(sdm,"getData")
+response = cache.req(sdm,"getData",forceupdate=True)
 # GetData method is not called, data has been cached
 response = cache.req(sdm,"getData")
 
+response = cache.req(sdm,"getData")
+
 # Function is executed
-response = cache.reqFunc(testFn)
+response = cache.reqFunc(testFn,1)
 # Function is not executed
-response = cache.reqFunc(testFn)
+response = cache.reqFunc(testFn,1)
 
 # create cache instead with cache disabled
 cache = RedisDataCache(None,"testapp")
@@ -95,8 +95,6 @@ response = cache.req(sdm,"getData")
 response = cache.req(sdm,"getData")
 
 print "***********************\nFinish Redis test\n***********************\n"
-
-
 
 
 print "***********************\nStart Memcached test\n***********************"
@@ -114,9 +112,9 @@ response = cache.req(sdm,"getData")
 response = cache.req(sdm,"getData")
 
 # Function is executed
-response = cache.reqFunc(testFn)
+response = cache.reqFunc(testFn,1)
 # Function is not executed
-response = cache.reqFunc(testFn)
+response = cache.reqFunc(testFn,1)
 
 # create cache instead with cache disabled
 cache = RedisDataCache(None,"testapp")
@@ -126,6 +124,13 @@ response = cache.req(sdm,"getData")
 response = cache.req(sdm,"getData")
 
 print "***********************\nFinish Memcached test\n***********************\n"
+
+
+
+
+
+
+
 
 
 
