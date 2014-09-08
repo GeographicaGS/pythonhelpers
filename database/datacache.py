@@ -2,7 +2,7 @@
 
 # DataCache. An usefull class to deal with caches. 
 # If you want to use RedisDataCache object you have to install redis for python (pip install redis)
-# If you want to use MemcachedDataCache object you have to install python-memcached (pip install python-memcached)
+# If you want to use MemcachedDataCache object you have to install python-memcached (pip install python-memcached)
 # Copyright (C) 2014 Geographica [Legal name - Geografía Aplicada S.L]
 # Author: Alberto Asuero
 
@@ -18,6 +18,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
 import hashlib as hashlib
 import cPickle
