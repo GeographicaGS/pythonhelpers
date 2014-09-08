@@ -112,7 +112,10 @@ class RedisDataCache(DataCache):
         timeout = timeout or self._timeout
         key = self.getPrefix() + key
         ## Add key and define an expire timeout in a pipeline for atomicity
-        self.getClient().pipeline().set(key, cPickle.dumps(value)).expire(key, timeout).execute()
+        if timeout is not None:
+            self.getClient().pipeline().set(key, cPickle.dumps(value)).expire(key, timeout).execute()
+        else:
+            self.getClient().pipeline().set(key, cPickle.dumps(value)).execute()
 
     def flush(self, pattern='', step=1000):
         """Flush all cache (by group of step keys for efficiency), 
